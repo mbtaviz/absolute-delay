@@ -1,0 +1,236 @@
+/* Add styles here TODO modify */
+
+body {
+  margin: 0 auto;
+  width: 850px;
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  color: #333;
+  font-size: 20px;
+}
+
+.container {
+  margin: 0 auto;
+  position: relative;
+  text-align: center
+}
+
+svg {
+  font-size: 10px;
+}
+.info {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-top: 2em;
+  font-size: 12px;
+  clear: both;
+  color: #777;
+}
+.panel {
+  float: left;
+  clear: none;
+  position: relative;
+}
+#legend,
+#spacer {
+  height: 20px;
+}
+#legend text {
+  font-size: 9px;
+}
+#chart {
+  height: 400px;
+  overflow: scroll;
+}
+.fadeout {
+  position: absolute;
+  bottom: 0;
+  height:10px;
+  width: 100%;
+  background: -webkit-linear-gradient(
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+  ); 
+  background-image: -moz-linear-gradient(
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+  );
+  background-image: -o-linear-gradient(
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+  );
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+  );
+  background-image: -ms-linear-gradient(
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+  );
+  z-index: 999;
+}
+
+.desc {
+  font-size: 12px;
+  line-height: 12px;
+}
+.blue {
+  fill: #2F5DA6;
+  stroke: #2F5DA6;
+}
+.red {
+  fill: #E12D27;
+  stroke: #E12D27;
+}
+.orange {
+  fill: #E87200;
+  stroke: #E87200;
+}
+path.blue {
+  stroke: #2F5DA6;
+  fill: none;
+}
+path.red {
+  stroke: #E12D27;
+  fill: none;
+}
+path.orange {
+  stroke: #E87200;
+  fill: none;
+}
+path.station {
+  stroke-width: 1px;
+}
+path.station:hover {
+  stroke-width: 2px;
+}
+path.station.dimmed {
+  opacity: 0.5;
+}
+path.station.active {
+  opacity: 1;
+}
+.tiny path {
+  opacity: 0.2;
+}
+.tiny .bar {
+  opacity: 0.0;
+}
+.tiny rect.scroll {
+  stroke: none;
+  fill: gray;
+  opacity: 0.2;
+}
+.text-background {
+  fill: white;
+  fill-opacity: 0.7;
+}
+.grid path,
+.grid line {
+  fill: none;
+  stroke: #000;
+  opacity: 0.1;
+  shape-rendering: crispEdges;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.bar .line text {
+  opacity: 0;
+}
+.day path,
+.day line {
+  fill: none;
+  stroke: none;
+}
+.day text {
+  font-weight: bold;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+
+/* D3-tip styles */
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+  pointer-events: none;
+  font-size: 10px;
+  text-align: left;
+}
+.bolder {
+  font-weight: bolder;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 15px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Northward tooltips */
+.d3-tip.n:after {
+  content: "\25BC";
+  margin: -3px 0 0 0;
+  top: 100%;
+  left: 0;
+  text-align: center;
+}
+
+/* Eastward tooltips */
+.d3-tip.e:after {
+  content: "\25C0";
+  margin: -6px 0 0 0;
+  top: 50%;
+  left: -12px;
+}
+
+/* Southward tooltips */
+.d3-tip.s:after {
+  content: "\25B2";
+  margin: 0 0 1px 0;
+  top: -8px;
+  left: 0;
+  text-align: center;
+}
+
+/* Westward tooltips */
+.d3-tip.w:after {
+  content: "\25B6";
+  margin: -4px 0 0 -1px;
+  top: 50%;
+  left: 100%;
+}
+
+/* Progress-meter */
+.progress-meter .background {
+  fill: #ccc;
+}
+
+.progress-meter .foreground {
+  fill: #000;
+}
+
+.progress-meter text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}

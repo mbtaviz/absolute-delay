@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="bower_components/d3/d3.js"></script>
+    <script type="text/javascript" src="bower_components/d3-tip/index.js"></script>
+    <script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
+    <script type="text/javascript" src="bower_components/momentjs/min/moment.min.js"></script>
+
+    <meta name="signet:authors" content="Michael Barry, Brian Card">
+    <meta name="signet:links" content="http://github.com/mbtaviz/absolute-delay, http://github.com/msbarry, http://twitter.com/msb5014">
+  
+    <link type="text/css" rel="stylesheet" href="main.css"/>
+    <title>Boston Subway Delay Over Time</title>
+  </head>
+  <body>
+    <div class="panel">
+      <div id="legend" class="x axis"></div>
+      <div id="chart"></div>
+      <div class="fadeout"></div>
+    </div>
+    <div class="panel">
+      <div id="spacer"></div>
+      <div id="tiny"></div>
+    </div>
+    <p class="info">
+      This graphic shows the transit time between stops on Boston's Red Orange, and
+      Blue Subway lines for 3 days in February.  The initial view shows transit times
+      starting from the northern (left) most stop on each line.  Click on a different line
+      to show transit times relative to that station instead.
+    </p>
+    <script type="text/javascript" src="loading.js"></script>
+    <script type="text/javascript" src="stops-in-order.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script src="//oss.maxcdn.com/signet/0.4.4/signet.min.js"></script>
+  </body>
+</html>
