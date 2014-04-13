@@ -3,7 +3,7 @@
   var margin = {top: 10, right: 10, bottom: 10, left: 80},
       tinyMargin = {top: 0, right: 0, bottom: 0, left: 0},
       outerWidth = 800,
-      outerHeight = 3 * 24 * 20,
+      outerHeight = 7 * 24 * 20,
       scrollBoxHeight = 400,
       tinyOuterWidth = 40,
       legendHeight = 20,
@@ -55,7 +55,7 @@
     width: outerWidth,
     height: scrollBoxHeight * 0.9,
     parent: d3.select("#chart svg"),
-    total: 1098057
+    total: 2589771
   });
 
   d3.json('median-delays.json', function (medians) {
@@ -113,7 +113,7 @@
         .orient("left");
       svg.append('g')
         .attr('class', 'day axis')
-        .attr('transform', 'translate(0,-12)')
+        .attr('transform', 'translate(0,-10)')
         .call(dayAxis);
 
       // determine max times per line (take both dirs into account)
@@ -121,10 +121,14 @@
       var xScale = d3.scale.linear()
           .range([10, width]);
       var xScales = {};
+      var tinyxScale = d3.scale.linear()
+          .range([0, tinyWidth]);
+      var tinyxScales = {};
       var xAxis = {};
       var xGrid = {};
       function setupScale(line) {
         xScales[line] = d3.time.scale();
+        tinyxScales[line] = d3.time.scale();
         xAxis[line] = d3.svg.axis()
           .tickFormat(function (d) { return Math.round(d / 1000 / 60) + "m"; })
           .ticks(d3.time.minute, 10)
@@ -192,11 +196,16 @@
         };
         var totalTime = d3.sum(d3.values(ranges)) + 20 * 60 * 1000;
         xScale.domain([0, totalTime]);
+        tinyxScale.domain([0, totalTime]);
         var lineFuncs = {};
+        var tinyLineFuncs = {};
         function adjustScale(color) {
           xScales[color]
             .domain([mins[color], maxes[color]])
             .range([starts[color], starts[color] + ranges[color]].map(xScale));
+          tinyxScales[color]
+            .domain([mins[color], maxes[color]])
+            .range([starts[color], starts[color] + ranges[color]].map(tinyxScale));
           legendSvg.selectAll('.' + color).transition().duration(1000).call(xAxis[color]);
           grid.selectAll('.' + color).transition().duration(1000).call(xGrid[color]);
 
@@ -205,31 +214,44 @@
               .y(function (d) { return yScale(d[0]); })
               .defined(function (d) { return !isNaN(d[1]); });
 
+          tinyLineFuncs[color] = d3.svg.line()
+              .x(function (d) { return tinyxScales[color](d[1]); })
+              .y(function (d) { return tinyyScale(d[0]); })
+              .defined(function (d) { return !isNaN(d[1]); });
         }
         ['red', 'blue', 'orange'].forEach(adjustScale);
 
-        var stationPaths = svg.selectAll('path.station')
-            .data(d3.keys(stations), function (d) { return d; });
+        function updateSvg(svg, lineFuncs, interactive) {
+          var stationPaths = svg.selectAll('path.station')
+              .data(d3.keys(stations), function (d) { return d; });
 
-        stationPaths
-            .transition().duration(1000)
-            .attr('d', function (d) { return lineFuncs[color(d)](stations[d]); });
+          stationPaths
+              .transition().duration(1000)
+              .attr('d', function (d) { return lineFuncs[color(d)](stations[d]); });
 
-        stationPaths
-            .enter()
-          .append('path')
-            .attr('class', function (d) {
-              return 'station ' + color(d);
-            })
-            .attr('d', function (d) { return lineFuncs[color(d)](stations[d]); })
-            .on('click', function (d) {
-              base[color(d)] = d.replace(/\|(red|orange|blue)/, '');
-              draw();
-            })
-            .on('click.mouseout', mouseout)
-            .on('mouseover', mouseover)
-            .on('mousemove', mouseover)
-            .on('mouseout', mouseout);
+          var newOnes = stationPaths
+              .enter()
+            .append('path')
+              .attr('class', function (d) {
+                return 'station ' + color(d);
+              })
+              .attr('d', function (d) { return lineFuncs[color(d)](stations[d]); })
+
+          if (interactive) {
+            newOnes
+              .on('click.mouseout', mouseout)
+              .on('mouseover', mouseover)
+              .on('mousemove', mouseover)
+              .on('mouseout', mouseout)
+              .on('click', function (d) {
+                base[color(d)] = d.replace(/\|(red|orange|blue)/, '');
+                draw();
+              });
+          }
+        }
+
+        updateSvg(svg, lineFuncs, true);
+        updateSvg(tinySvg, tinyLineFuncs, false);
       }
 
       function mouseover(d) {
@@ -245,7 +267,7 @@
         tip.style('top', (pos[1] - 20) + 'px');
         tip.style('left', (pos[0] + 15) + 'px');
         tip.html([
-          moment(time).format('dddd H:mma'),
+          moment(time).format('dddd h:mma'),
           '<span class="bolder">' + Math.abs(Math.round(difference / 60 / 1000)) + 'm</span> from ' + names[base[line] + '|' + line] + ' to ' + names[d]
         ].join("<br>"));
       }
@@ -256,6 +278,35 @@
           .classed('active', false)
           .classed('dimmed', false);
       }
+
+      d3.select('#chart').on('scroll', setScrollBox);
+      d3.select('#tiny').on('click', setScroll);
+
+      var scrollToTinyScale = d3.scale.linear()
+          .domain([0, outerHeight])
+          .range([0, tinyOuterHeight]);
+
+      var scroll = tinySvg.append('rect')
+          .attr('class', 'scroll')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', tinyOuterWidth)
+          .attr('height', scrollToTinyScale(tinyOuterHeight));
+
+      function setScrollBox() {
+        var top = d3.select("#chart").node().scrollTop;
+        scroll.attr('y', scrollToTinyScale(top));
+      }
+
+      function setScroll() {
+        var pos = d3.mouse(tinySvg.node());
+        var y = pos[1];
+        var scrollPos = Math.max(scrollToTinyScale.invert(y) - tinyOuterHeight / 2, 0);
+        d3.select("#chart").node().scrollTop = scrollPos;
+        d3.event.stopPropagation();
+      }
+
+      setScrollBox();
 
       function color(str) {
         return str.replace(/.*\|/g, '');

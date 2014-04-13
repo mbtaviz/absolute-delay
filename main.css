@@ -111,11 +111,15 @@ path.station.dimmed {
 path.station.active {
   opacity: 1;
 }
+.tiny path.dimmed {
+  opacity: 0.1;
+}
+.tiny path.active {
+  opacity: 1;
+}
 .tiny path {
   opacity: 0.2;
-}
-.tiny .bar {
-  opacity: 0.0;
+  stroke-width: 0.5px !important;
 }
 .tiny rect.scroll {
   stroke: none;
